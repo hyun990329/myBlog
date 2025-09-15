@@ -20,15 +20,28 @@ function App() {
   // 좋아요 숫자를 보관할 스테이트
   const [like, setLike] = useState([0, 0, 0]);
 
-
-  function changeTitle () {
-    const newTitle = [...title]
-    newTitle[0] = '여자 코트 추천'
-    setTitle(newTitle)
-  }
-
   // Modal 페이지의 노출 작업
   const [modal, setModal] = useState(false);
+
+  // 직전 선택한 인덱스를 저장할 스테이트
+  const [currentIndex, setCurrentIndex] = useState(null);
+
+  // 제목 클릭 시 모달 보이기
+  function handleTitle(index) {
+    // 조건 : 같은 제목을 클릭하면 나타나고 사라짐
+    // 다른 제목을 클릭하면 변동 없어야 함
+    if(! modal) {
+      // 1. 현재 모달이 닫혀 있으면 연다
+      setModal(true);
+      setCurrentIndex(index);
+    } else if(currentIndex == index) {
+      // 2. 같은 타이틀이 선택 된 경우
+      setModal(false);
+    } else {
+      setCurrentIndex(index);
+      
+    }
+  }
 
 
   return (
@@ -45,35 +58,24 @@ function App() {
       }}>글 정렬하기</button>
 
       <div className='list'>
-        <h4 onClick={()=>{
-          setModal(! modal)
-        }}>{title[0]}<span onClick={()=>{
-          const newLikes = [...like]
-          newLikes[0]++
-          setLike(newLikes)
-        }}>👍</span>{like[0]}
-        <button onClick={changeTitle}>변경</button>
+       {title.map((item, index)=>{
+        
+        return(
+        <div>
+          <h4 onClick={()=> handleTitle(index)}>
+            {title[index]}
+            <span onClick={()=>{
+                const newLikes = [...like]
+                newLikes[index]++
+                setLike(newLikes)
+        }}>👍</span>{like[index]}
         </h4>
-        <p>작성일 : {createDate[0]}</p>
+        <p>작성일 : {createDate[index]}</p>)
+        </div>
+       )})}
       </div>  
 
-      <div className='list'>
-       <h4>{title[1]}<span onClick={()=>{
-          const newLikes = [...like]
-          newLikes[1]++
-          setLike(newLikes)
-        }}>👍</span>{like[1]}</h4>
-        <p>작성일 : {createDate[1]}</p>
-      </div>
       
-      <div className='list'>
-        <h4>{title[2]}<span onClick={()=>{
-          const newLikes = [...like]
-          newLikes[2]++
-          setLike(newLikes)
-        }}>👍</span>{like[2]}</h4>
-        <p>작성일 : {createDate[2]}</p>
-      </div>
 
         {/* 상세 페이지 나타날 곳 */}
         {modal ? <Modal />: null}
