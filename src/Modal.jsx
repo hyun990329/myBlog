@@ -5,12 +5,14 @@
 // 4. 사용하고자 하는 컴포넌트에서 import Modal from '위치'
 // 5. <Modal /> 로 사용
 
-function Modal() {
+
+// props drilling 방식
+function Modal({color, title, currentIndex, createDate, details}) {
   return[
-        <div className='modal'>
-          <h4>제목</h4>
-          <p>날짜</p>
-          <p>상세내용</p>
+        <div className='modal' style={{background: color}}>
+          <h4>{title[currentIndex]}</h4>
+          <p>{createDate[currentIndex]}</p>
+          <p>{details[currentIndex]}</p>
         </div>
   ]
 }
