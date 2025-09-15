@@ -45,7 +45,9 @@ function App() {
       }}>글 정렬하기</button>
 
       <div className='list'>
-        <h4>{title[0]}<span onClick={()=>{
+        <h4 onClick={()=>{
+          setModal(! modal)
+        }}>{title[0]}<span onClick={()=>{
           const newLikes = [...like]
           newLikes[0]++
           setLike(newLikes)
