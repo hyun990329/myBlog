@@ -1,98 +1,55 @@
 import { useState } from 'react';
-import './App.css'
+import './App.css';
 import Modal from './Modal';
+import Header from './Header';
+import Blog from './Blog';
 
 function App() {
-
-  // 데이터 바인딩
-  let post = '강남 제육 맛집';
-  const [title, setTitle] = useState([
-    '남자 코트 추천',
-    '강남 우동 맛집',
-    '자바 스터디'
+  const [posts, setPosts] = useState([
+    { title: '남자 코트 추천', createDate: '2025-05-01', details: '심플한 디자인의 코트로 가을에 잘 어울림', like: 0 },
+    { title: '강남 우동 맛집', createDate: '2025-06-01', details: '강남 우동의 찐 맛집! 먹어보진 않았음', like: 0 },
+    { title: '자바 스터디', createDate: '2025-07-01', details: '자바 스터디는 말 만하고 못함', like: 0 },
   ]);
-  const [createDate, setCreateDate] = useState([
-    '2025-05-01',
-    '2025-06-01',
-    '2025-07-01'
-  ]);
-
-  const [details, setDetails] = useState([
-    '심플한 디자인의 코트로 가을에 잘 어울림',
-    '강남 우동의 찐 맛집! 먹어보진 않았음',
-    '자바 스터디는 말 만하고 못함'
-  ]);
-
-  // 좋아요 숫자를 보관할 스테이트
-  const [like, setLike] = useState([0, 0, 0]);
-
-  // Modal 페이지의 노출 작업
   const [modal, setModal] = useState(false);
-
-  // 직전 선택한 인덱스를 저장할 스테이트
   const [currentIndex, setCurrentIndex] = useState(null);
 
-  // 제목 클릭 시 모달 보이기
-  function handleTitle(index) {
-    // 조건 : 같은 제목을 클릭하면 나타나고 사라짐
-    // 다른 제목을 클릭하면 변동 없어야 함
-    if(! modal) {
-      // 1. 현재 모달이 닫혀 있으면 연다
-      setModal(true);
-      setCurrentIndex(index);
-    } else if(currentIndex == index) {
-      // 2. 같은 타이틀이 선택 된 경우
-      setModal(false);
-    } else {
-      setCurrentIndex(index);
-      
-    }
-  }
+  // 좋아요 증가 함수
+  const handleLike = (index) => {
+    const newPosts = [...posts];
+    newPosts[index].like += 1;
+    setPosts(newPosts);
+  };
 
+  // 제목 클릭 시 모달 토글
+  const handleTitle = (index) => {
+    if (modal && currentIndex === index) {
+      setModal(false); // 같은 제목 클릭 시 모달 닫기
+    } else {
+      setModal(true); // 다른 제목 클릭 시 모달 열기
+      setCurrentIndex(index);
+    }
+  };
+
+  // 글 정렬 함수
+  const sortPosts = () => {
+    const sortedPosts = [...posts].sort((a, b) => a.title.localeCompare(b.title));
+    setPosts(sortedPosts);
+  };
 
   return (
-    <div className='App'>
-      <div className='black-bg'>
-        React + vite 로 만드는 블로그
-      </div>
-      {/* <h4 style={{color:'red', fontSize:'20px'}}>{post}</h4> */}
-
-      {/* 타이틀 정렬하기 */}
-      <button onClick={()=>{
-        const sortedTitle = [...title].sort()
-        setTitle(sortedTitle)
-      }}>글 정렬하기</button>
-
-      <div className='list'>
-       {title.map((item, index)=>{
-        
-        return(
-        <div>
-          <h4 onClick={()=> handleTitle(index)}>
-            {title[index]}
-            <span onClick={()=>{
-                const newLikes = [...like]
-                newLikes[index]++
-                setLike(newLikes)
-        }}> 👍</span>{like[index]}
-        </h4>
-        <p>작성일 : {createDate[index]}</p>
-        </div>
-       )})}
-      </div>  
-
-      
-
-        {/* 상세 페이지 나타날 곳 */}
-        {modal ? <Modal
-        color='lightblue'
-        title={title}
-        currentIndex={currentIndex}
-        createDate={createDate}
-        details={details}
-        />: null}
+    <div className="app-container">
+      <Header />
+      <Blog posts={posts} handleLike={handleLike} handleTitle={handleTitle} sortPosts={sortPosts} />
+      {modal && (
+        <Modal
+          color="lightblue"
+          title={posts[currentIndex].title}
+          createDate={posts[currentIndex].createDate}
+          details={posts[currentIndex].details}
+        />
+      )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

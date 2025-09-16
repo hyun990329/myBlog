@@ -7,14 +7,14 @@
 
 
 // props drilling 방식
-function Modal({color, title, currentIndex, createDate, details}) {
-  return[
-        <div className='modal' style={{background: color}}>
-          <h4>{title[currentIndex]}</h4>
-          <p>{createDate[currentIndex]}</p>
-          <p>{details[currentIndex]}</p>
-        </div>
-  ]
+function Modal({ color, title, createDate, details }) {
+  return (
+    <div className="modal" style={{ background: color }}>
+      <h4>{title}</h4>
+      <p>{createDate}</p>
+      <p>{details}</p>
+    </div>
+  );
 }
 
 export default Modal;
