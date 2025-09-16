@@ -1,55 +1,86 @@
 import { useState } from 'react';
-import './App.css';
+import './App.css'
 import Modal from './Modal';
-import Header from './Header';
+import Title from './Title';
 import Blog from './Blog';
 
 function App() {
-  const [posts, setPosts] = useState([
-    { title: '남자 코트 추천', createDate: '2025-05-01', details: '심플한 디자인의 코트로 가을에 잘 어울림', like: 0 },
-    { title: '강남 우동 맛집', createDate: '2025-06-01', details: '강남 우동의 찐 맛집! 먹어보진 않았음', like: 0 },
-    { title: '자바 스터디', createDate: '2025-07-01', details: '자바 스터디는 말 만하고 못함', like: 0 },
+
+  // 데이터 바인딩
+  let post = '강남제육맛집';
+
+  const [title, setTitle] = useState([
+    '남자코트추천',
+    '강남우동맛집',
+    '자바스터디'
   ]);
+
+  const [createDate, setCreateDate] = useState([
+    '2025-05-01',
+    '2025-06-01',
+    '2025-07-01',
+  ]);
+
+  const [details, setDetails] = useState([
+    '심플한 디자인의 코트로 가을에 잘 어울림',
+    '강남 우동의 찐 맛집! 먹어보진 않았음',
+    '자바 스터디는 말 만하고 못함',
+  ])
+
+  // 좋아요 누름 숫자를 보관할 스테이트
+  const [like, setLike] = useState([0,0,0]);
+
+  // 좋아요 처리 함수
+  // function addLikes(num){
+  //   setLike(like[num]+1)
+  // }
+
+  function changeTitle(){
+    const newTitle = [... title];
+    newTitle[0] = '여자코드추천';
+    setTitle(newTitle);
+  }
+
+  // 모달페이지가 보이게/안보이게 작업하기위한 스테이트
   const [modal, setModal] = useState(false);
+
+  // 직전 선택한 인덱스를 저장할 스테이트
   const [currentIndex, setCurrentIndex] = useState(null);
-
-  // 좋아요 증가 함수
-  const handleLike = (index) => {
-    const newPosts = [...posts];
-    newPosts[index].like += 1;
-    setPosts(newPosts);
-  };
-
-  // 제목 클릭 시 모달 토글
-  const handleTitle = (index) => {
-    if (modal && currentIndex === index) {
-      setModal(false); // 같은 제목 클릭 시 모달 닫기
-    } else {
-      setModal(true); // 다른 제목 클릭 시 모달 열기
-      setCurrentIndex(index);
-    }
-  };
-
-  // 글 정렬 함수
-  const sortPosts = () => {
-    const sortedPosts = [...posts].sort((a, b) => a.title.localeCompare(b.title));
-    setPosts(sortedPosts);
-  };
+  
 
   return (
-    <div className="app-container">
-      <Header />
-      <Blog posts={posts} handleLike={handleLike} handleTitle={handleTitle} sortPosts={sortPosts} />
-      {modal && (
-        <Modal
-          color="lightblue"
-          title={posts[currentIndex].title}
-          createDate={posts[currentIndex].createDate}
-          details={posts[currentIndex].details}
-        />
-      )}
+    <div className='App'>
+      {/* Title이 위치할 곳 */}
+      <Title />
+
+      {/* <h4 style={{color: 'red', fontSize: '20px'}}>{post}</h4> */}
+
+      {/* Blog 위치할 곳 */}
+      <Blog 
+        title={title}
+        createDate={createDate}
+        details={details}
+        setTitle={setTitle}
+        setCreateDate={setCreateDate}
+        like={like}
+        setLike={setLike}
+        setDetails={setDetails}
+        currentIndex={currentIndex}
+        setCurrentIndex={setCurrentIndex}
+        modal={modal}
+        setModal={setModal}
+      />
+
+      {/* 상세페이지 나타날 곳 */}
+      {modal ? <Modal 
+          color="lightblue" 
+          title={title} 
+          currentIndex={currentIndex} 
+          createDate={createDate}
+          details={details}
+          />: null }
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
